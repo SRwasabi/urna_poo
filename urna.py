@@ -206,19 +206,35 @@ def tela_voto(eleitor):
     criar_teclado_no_frame(frame_direito, visor, confirmar_voto)
 
 
-def tela_questiona_voto(numero_candidato):
+def tela_questionar_voto(numero_candidato):
+    def confirmar_voto():
+        urna.registrar_voto(eleitor, numero_candidato)
+        mudar_tela(tela_confirmacao)
 
-    mudar_tela(tela_confirmacao)
-    frame_principal = tk.Frame(urna_eletronica, bg="white", width=700, height=400)
-    frame_principal.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+    def corrigir_voto():
+        mudar_tela(lambda: tela_voto(eleitor))
+
+    for widget in urna_eletronica.winfo_children():
+        widget.destroy()
+
+    frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
+    frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+    frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
+    frame_direito.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
     texto_pergunta = tk.Label(
-        frame_principal,
+        frame_esquerdo,
         text=f"Você deseja confirmar o voto no número {numero_candidato}?",
         bg="white",
         font=("Arial", 16, "bold"),
-        fg="#007BFF"
+        fg="#007BFF",
+        wraplength=380,
+        justify="center"
     )
     texto_pergunta.pack(pady=50)
+
+    criar_teclado_no_frame(frame_direito, None, confirmar_voto)
 
 # tela de confirmação
 def tela_confirmacao():
