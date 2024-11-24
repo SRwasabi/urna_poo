@@ -5,31 +5,37 @@ import tkinter as tk
 from tkinter import messagebox
 
 #==================================================================================================#
-# Preparos iniciais da Urna
+# Inicialização da Urna
 global urna
 global titulo_eleitor
 global eleitor
 
-FILE_ELEITORES = 'eleitores.pkl'
-FILE_CANDIDATOS = 'candidatos.pkl'
+ARQUIVO_ELEITORES = 'eleitores.pkl'
+ARQUIVO_CANDIDATOS = 'candidatos.pkl'
 
-eleitores = {} #dicionário a chave será o titulo
+eleitores = {}  # Dicionário onde a chave será o título
 candidatos = {}
 try:
-    print("Carregando arquivo de eleitores ...")
+    print("Carregando lista de eleitores...")
 
-    with open(FILE_ELEITORES, 'rb') as arquivo:
-            eleitores = pickle.load(arquivo)
+    # Carregar eleitores do arquivo
+    with open(ARQUIVO_ELEITORES, 'rb') as arquivo:
+        eleitores = pickle.load(arquivo)
 
-    print("Carregando arquivo de candidatos...")
-    with open(FILE_CANDIDATOS, "rb") as arquivo:
+    print("Carregando lista de candidatos...")
+
+    # Carregar candidatos do arquivo
+    with open(ARQUIVO_CANDIDATOS, 'rb') as arquivo:
         candidatos = pickle.load(arquivo)
 
-except FileNotFoundError as fnfe:
-    print(fnfe)
-    print("Arquivo nao encontrado, nenhum eleitor carregado!")
+except FileNotFoundError as erro:
+    print(erro)
+    print("Arquivo não encontrado. Nenhum eleitor carregado!")
+
+# Criação da urna com os dados carregados
 urna = Urna("madu", "1", "1", candidatos.values(), eleitores.values())
 #==================================================================================================#
+
 
 # Função para alternar entre telas
 def mudar_tela(nova_tela):
@@ -214,20 +220,52 @@ def criar_teclado_no_frame(frame, visor, confirmar):
         tk.Button(frame, text=text, font=("Arial", 12), width=5, height=2,
                   command=lambda t=text: adicionar_numero(t)).grid(row=row, column=col, padx=5, pady=5)
 
-    tk.Button(frame, text="Corrigir", font=("Arial", 12), bg="red", fg="white", width=7, height=2,
-              command=corrigir).grid(row=5, column=0, pady=5)
-    tk.Button(frame, text="Branco", font=("Arial", 12), bg="white", width=7, height=2,
-              command=branco).grid(row=5, column=1, pady=5)
-    tk.Button(frame, text="Confirmar", font=("Arial", 12), bg="green", fg="white", width=7, height=2,
-              command=confirmar).grid(row=5, column=2, pady=5)
+    # botao corrigir formatação
+    tk.Button(
+        frame,
+        text="Corrigir",
+        font=("Arial", 12, "bold"),
+        bg="red",
+        fg="white",
+        width=8,
+        height=2,
+        command=corrigir
+    ).grid(row=5, column=0, pady=5)
 
-# config da janela principal
+    # botao branco formatação
+    tk.Button(
+        frame,
+        text="Branco",
+        font=("Arial", 12, "bold"),
+        bg="white",
+        fg="black",
+        width=8,
+        height=2,
+        command=branco
+    ).grid(row=5, column=1, pady=5)
+
+    # botao confirmar formataçaõ
+    tk.Button(
+        frame,
+        text="Confirmar",
+        font=("Arial", 12, "bold"),
+        bg="green",
+        fg="white",
+        width=8,
+        height=2,
+        command=confirmar
+    ).grid(row=5, column=2, pady=5)
+
+
+# Configuração da janela principal
 urna_eletronica = tk.Tk()
 urna_eletronica.title("Urna Eletrônica")
-urna_eletronica.geometry("700x400")
+urna_eletronica.geometry("700x450")
 urna_eletronica.config(bg="white")
 
-# inicia com a tela inicial novamente
+# Inicia com a tela inicial
 tela_inicial()
+
+# Mantém a execução da interface gráfica
 
 urna_eletronica.mainloop()
