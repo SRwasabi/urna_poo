@@ -33,9 +33,11 @@ urna = Urna("madu", "1", "1", candidatos.values(), eleitores.values())
 
 # Função para alternar entre telas
 def mudar_tela(nova_tela):
-    for widget in urna_eletronica.winfo_children():
-        widget.destroy()  # Remove todos os widgets da tela atual
-        #widgets igual a qualquer componente da interface 
+    # Limpa todos os widgets existentes na janela principal
+    for componente in urna_eletronica.winfo_children():
+        componente.destroy()
+
+    # Executa a função correspondente à nova tela
     nova_tela()
 
 # Tela inicial
@@ -56,13 +58,13 @@ def tela_inicial():
         frame_esquerdo,
         text="Para inserir título de eleitor, aperte em Confirmar.",
         bg="white",
-        font=("Arial", 12),
+        font=("Arial", 15, "bold"),  # Adicionado 'bold' para o texto ficar em negrito
         wraplength=380,
         justify="center"
     )
-    texto_inicial.pack(pady=20)
+    texto_inicial.pack(pady=22)
 
-# Teclado numérico
+    # Teclado numérico
     criar_teclado_no_frame(frame_direito, None, confirmar_principal)
 
 # Função para alternar entre telas
@@ -70,7 +72,7 @@ def mudar_tela(nova_tela):
     for widget in urna_eletronica.winfo_children():
         widget.destroy()
     nova_tela()
-    
+
 
 #==================================================================================================#
 
@@ -81,18 +83,23 @@ def tela_titulo():
     def confirmar_titulo():
         titulo = visor.get()
         if len(titulo) == 12:
-            titulo_eleitor = int(titulo)
-            eleitor = urna.get_eleitor(titulo_eleitor)
-            if not eleitor:
-                raise Exception("Eleitor não é desta Urna")
-            
-            eleitor = eleitores[titulo_eleitor]
-            mudar_tela(lambda: tela_informacoes(eleitor))
+            try:
+                titulo_eleitor = int(titulo)
+                eleitor = urna.get_eleitor(titulo_eleitor)
+                if not eleitor:
+                    # Exceção levantada quando o eleitor não for encontrado
+                    raise Exception("Eleitor não é desta Urna")
 
+                eleitor = eleitores[titulo_eleitor]
+                mudar_tela(lambda: tela_informacoes(eleitor))
+
+            except Exception as e:
+                # Exibe a mensagem de erro no caso de exceção
+                messagebox.showwarning("Erro", str(e))
         else:
             messagebox.showwarning("Erro", "O título deve conter 12 dígitos!")
 
- # Estrutura principal
+    # Estrutura principal
  #visor
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
@@ -114,7 +121,7 @@ def tela_titulo():
 def tela_informacoes(eleitor):
     def confirmar_informacoes():
         mudar_tela(lambda: tela_voto(eleitor))
-    
+
  # Estrutura principal
  #visor
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
