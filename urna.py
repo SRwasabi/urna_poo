@@ -177,25 +177,8 @@ def tela_informacoes(eleitor):
 # Função para registrar e contabilizar votos
 def tela_voto(eleitor):
     def confirmar_voto():
-        voto = visor.get().strip()
-
-        if voto == "Voto em Branco":
-            urna.registrar_voto(eleitor, "BRANCO")
-        elif voto == "":
-            urna.registrar_voto(eleitor, "NULO")
-        elif voto.isdigit():
-            voto = int(voto)
-            candidato_encontrado = False
-            for candidato in candidatos:
-                if candidato.numero == voto:
-                    urna.registrar_voto(eleitor, candidato.numero)
-                    candidato.adicionar_voto()
-                    candidato_encontrado = True
-                    break
-            if not candidato_encontrado:
-                urna.registrar_voto(eleitor, "NULO")
-        else:
-            urna.registrar_voto(eleitor, "NULO")
+        voto = int(visor.get())
+        urna.registrar_voto(eleitor, voto)
 
         mudar_tela(tela_confirmacao)
 
