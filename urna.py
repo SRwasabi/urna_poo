@@ -174,11 +174,10 @@ def tela_informacoes(eleitor):
     criar_teclado_no_frame(frame_direito, None, confirmar_informacoes)
 
 # tela para votação
+# Função para registrar e contabilizar votos
 def tela_voto(eleitor):
     def confirmar_voto():
         voto = visor.get().strip()
-
-        print(f"Voto recebido: '{voto}'")
 
         if voto == "Voto em Branco":
             urna.registrar_voto(eleitor, "BRANCO")
@@ -186,10 +185,15 @@ def tela_voto(eleitor):
             urna.registrar_voto(eleitor, "NULO")
         elif voto.isdigit():
             voto = int(voto)
-            if any(candidato.numero == voto for candidato in urna.candidatos):
-                urna.registrar_voto(eleitor, voto)
-            else:
-                urna.registrar_voto(eleitor, "NULO")
+            candidato_encontrado = False
+            for candidato in urna.candidatos:
+                if candidato.numero == voto:
+                    urna.registrar_voto(eleitor, candidato.numero)  # registra
+                    candidato.adicionar_voto()  # atualiza votos do candidato
+                    candidato_encontrado = True
+                    break
+            if not candidato_encontrado:
+                urna.registrar_voto(eleitor, "NULO") # nao encontrou é nulo
         else:
             urna.registrar_voto(eleitor, "NULO")
 
@@ -221,14 +225,11 @@ def tela_voto(eleitor):
     criar_teclado_no_frame(frame_direito, visor, confirmar_voto)
 
 
-def tela_confirmacao_voto(numero_candidato):
-    mudar_tela(tela_confirmacao)
+def tela_questiona_voto(numero_candidato):
 
-    # estrutura
+    mudar_tela(tela_confirmacao)
     frame_principal = tk.Frame(urna_eletronica, bg="white", width=700, height=400)
     frame_principal.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-
-
     texto_pergunta = tk.Label(
         frame_principal,
         text=f"Você deseja confirmar o voto no número {numero_candidato}?",
@@ -237,10 +238,6 @@ def tela_confirmacao_voto(numero_candidato):
         fg="#007BFF"
     )
     texto_pergunta.pack(pady=50)
-
-
-
-
 
 # tela de confirmação
 def tela_confirmacao():
