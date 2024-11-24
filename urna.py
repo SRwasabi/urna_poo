@@ -178,23 +178,21 @@ def tela_voto(eleitor):
     def confirmar_voto():
         voto = visor.get().strip()
 
-        if voto == "":
+        if voto == "Voto em branco":  # se o campo ta vazio, registra como voto em branco
             urna.registrar_voto(eleitor, "BRANCO")
-        elif voto.lower() == "voto em branco":  # "Voto em Branco", registra como nulo
-            urna.registrar_voto(eleitor, "NULO")
-        elif voto.isdigit():  # verifica se o valor digitado é numérico
+        elif voto.isdigit():
             voto = int(voto)
             if urna.candidato_existe(voto):
                 urna.registrar_voto(eleitor, voto)
             else:
-                urna.registrar_voto(eleitor, "NULO")
+                urna.registrar_voto(eleitor, "Voto em branco")
         else:
-            messagebox.showwarning("Erro", "Entrada inválida! Digite um número ou deixe em branco para voto BRANCO.")
+            messagebox.showwarning("Erro", "Entrada inválida! Digite um número de candidato existente.")
             return
 
         mudar_tela(tela_confirmacao)
 
-    #  tela de votação
+
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -220,15 +218,6 @@ def tela_voto(eleitor):
     # Teclado numérico
     criar_teclado_no_frame(frame_direito, visor, confirmar_voto)
 
-    #  "Voto em Branco"
-    botao_branco = tk.Button(
-        frame_esquerdo,
-        text="BRANCO",
-        font=("Arial", 14),
-        bg="#cccccc",
-        command=lambda: visor.insert(0, "Voto em Branco")
-    )
-    botao_branco.pack(pady=10)
 
 def tela_confirmacao_voto(numero_candidato):
     mudar_tela(tela_confirmacao)
