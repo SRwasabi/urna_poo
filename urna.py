@@ -176,38 +176,59 @@ def tela_informacoes(eleitor):
 # tela para votação
 def tela_voto(eleitor):
     def confirmar_voto():
-        voto = int(visor.get())
-        urna.registrar_voto(eleitor, voto)
+        voto = visor.get().strip()
+
+        if voto == "":
+            urna.registrar_voto(eleitor, "BRANCO")
+        elif voto.lower() == "voto em branco":  # "Voto em Branco", registra como nulo
+            urna.registrar_voto(eleitor, "NULO")
+        elif voto.isdigit():  # verifica se o valor digitado é numérico
+            voto = int(voto)
+            if urna.candidato_existe(voto):
+                urna.registrar_voto(eleitor, voto)
+            else:
+                urna.registrar_voto(eleitor, "NULO")
+        else:
+            messagebox.showwarning("Erro", "Entrada inválida! Digite um número ou deixe em branco para voto BRANCO.")
+            return
 
         mudar_tela(tela_confirmacao)
 
-  #  estrutura principal
-  #visor
+    #  tela de votação
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-#teclado
-    frame_vazio = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  # espaçamento 1
+
+    frame_vazio = tk.Frame(urna_eletronica, bg="white", width=50, height=400)
     frame_vazio.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
-    frame_vazio_2 = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  # espaçamento 2
+    frame_vazio_2 = tk.Frame(urna_eletronica, bg="white", width=50, height=400)
     frame_vazio_2.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
 
-    frame_vazio_3 = tk.Frame(urna_eletronica, bg="white", width=25, height=300)  # espaçamento 3
+    frame_vazio_3 = tk.Frame(urna_eletronica, bg="white", width=25, height=300)
     frame_vazio_3.grid(row=0, column=2, padx=20, pady=10, sticky="nsew")
 
     frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
     frame_direito.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
 
- # Texto e visor
+    # Texto e visor
     texto = tk.Label(frame_esquerdo, text="Vote:", bg="white", font=("Arial", 14))
     texto.pack(pady=10)
-    # Caixa para o visor
+
     visor = tk.Entry(frame_esquerdo, font=("Arial", 16), justify="center", bg="#f4f4f4", width=20)
     visor.pack(pady=10)
 
-    # teclado numérico
+    # Teclado numérico
     criar_teclado_no_frame(frame_direito, visor, confirmar_voto)
 
+    #  "Voto em Branco"
+    botao_branco = tk.Button(
+        frame_esquerdo,
+        text="BRANCO",
+        font=("Arial", 14),
+        bg="#cccccc",
+        command=lambda: visor.insert(0, "Voto em Branco")
+    )
+    botao_branco.pack(pady=10)
 
 def tela_confirmacao_voto(numero_candidato):
     mudar_tela(tela_confirmacao)
