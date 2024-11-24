@@ -186,20 +186,18 @@ def tela_voto(eleitor):
         elif voto.isdigit():
             voto = int(voto)
             candidato_encontrado = False
-            for candidato in urna.candidatos:
+            for candidato in candidatos:
                 if candidato.numero == voto:
-                    urna.registrar_voto(eleitor, candidato.numero)  # registra
-                    candidato.adicionar_voto()  # atualiza votos do candidato
+                    urna.registrar_voto(eleitor, candidato.numero)
+                    candidato.adicionar_voto()
                     candidato_encontrado = True
                     break
             if not candidato_encontrado:
-                urna.registrar_voto(eleitor, "NULO") # nao encontrou é nulo
+                urna.registrar_voto(eleitor, "NULO")
         else:
             urna.registrar_voto(eleitor, "NULO")
 
         mudar_tela(tela_confirmacao)
-
-
 
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
