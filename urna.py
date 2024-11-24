@@ -6,12 +6,14 @@ from tkinter import messagebox
 
 #==================================================================================================#
 # Inicialização da Urna
-global urna
-global titulo_eleitor
 global eleitor
+global titulo_eleitor
+global urna
+
 
 ARQUIVO_ELEITORES = 'eleitores.pkl'
 ARQUIVO_CANDIDATOS = 'candidatos.pkl'
+
 
 eleitores = {}  # Dicionário onde a chave será o título
 candidatos = {}
@@ -106,22 +108,34 @@ def tela_titulo():
             messagebox.showwarning("Erro", "O título deve conter 12 dígitos!")
 
     # Estrutura principal
- #visor
+    # Visor
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-#teclado
-    frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
-    frame_direito.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
-# Texto e visor
-    texto = tk.Label(frame_esquerdo, text="Digite o Título de Eleitor:", bg="white", font=("Arial", 12))
-    texto.pack(pady=10)
+    # Teclado
+    frame_vazio = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  # espaçamento 1
+    frame_vazio.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
-    visor = tk.Entry(frame_esquerdo, font=("Arial", 16), justify="center")
-    visor.pack(pady=10)
+    frame_vazio_2 = tk.Frame(urna_eletronica, bg="white", width=30, height=400)  # largura reduzida
+    frame_vazio_2.grid(row=0, column=2, padx=8, pady=10, sticky="nsew")
 
- # Teclado numérico
+    frame_vazio_3 = tk.Frame(urna_eletronica, bg="white", width=1, height=300)  # espaçamento 3
+    frame_vazio_3.grid(row=0, column=2, padx=0, pady=10, sticky="nsew")
+
+    frame_direito = tk.Frame(urna_eletronica, bg="white", width=250, height=400)  # aumentada a largura
+    frame_direito.grid(row=0, column=4, padx=15, pady=10, sticky="nsew")
+
+    # Texto explicativo
+    texto = tk.Label(frame_esquerdo, text="Digite o Título de Eleitor:", bg="white", font=("Arial", 14, "bold"))
+    texto.grid(row=0, column=0, padx=5, pady=10, sticky="w")
+
+    # Caixa de texto para o visor (com fundo cinza e abaixo da mensagem)
+    visor = tk.Entry(frame_esquerdo, font=("Arial", 16), justify="center", bg="#f4f4f4", width=20)
+    visor.grid(row=1, column=0, padx=5, pady=10, sticky="w")
+
+    # Teclado numérico
     criar_teclado_no_frame(frame_direito, visor, confirmar_titulo)
+
 
 # Tela para exibir informações do eleitor
 def tela_informacoes(eleitor):
@@ -133,17 +147,30 @@ def tela_informacoes(eleitor):
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 #teclado
+    frame_vazio = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  #  espaçamento 1
+    frame_vazio.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+    frame_vazio_2 = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  #  espaçamento 2
+    frame_vazio_2.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+
+    frame_vazio_3 = tk.Frame(urna_eletronica, bg="white", width=25, height=300)  # espaçamento 3
+    frame_vazio_3.grid(row=0, column=2, padx=20, pady=10, sticky="nsew")
+
     frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
-    frame_direito.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+    frame_direito.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
 
- # Informações do eleitor
-    texto = tk.Label(frame_esquerdo, text="Informações do Eleitor:", bg="white", font=("Arial", 12))
-    texto.pack(pady=10)
+    # Informações do eleitor
+    texto = tk.Label(frame_esquerdo, text="Informações do Eleitor:", bg="white", font=("Arial", 16, "bold"),
+                     fg="#4A90E2")
+    texto.pack(pady=15)
+    # Caixa para as informações do eleitor
+    info_frame = tk.Frame(frame_esquerdo, bg="#f4f4f4", bd=2, relief="solid", padx=12, pady=12, width=350)
+    info_frame.pack(pady=5, fill="x")
 
-    info = tk.Label(frame_esquerdo, text=f"{eleitor}", bg="white", font=("Arial", 12))
-    info.pack(pady=10)
+    info = tk.Label(info_frame, text=f"{eleitor}", bg="#f4f4f4", font=("Arial", 14), fg="#333333")
+    info.pack()
 
- # Teclado numérico
+    # Teclado numérico
     criar_teclado_no_frame(frame_direito, None, confirmar_informacoes)
 
 # tela para votação
@@ -159,20 +186,74 @@ def tela_voto(eleitor):
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 #teclado
+    frame_vazio = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  # espaçamento 1
+    frame_vazio.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+    frame_vazio_2 = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  # espaçamento 2
+    frame_vazio_2.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+
+    frame_vazio_3 = tk.Frame(urna_eletronica, bg="white", width=25, height=300)  # espaçamento 3
+    frame_vazio_3.grid(row=0, column=2, padx=20, pady=10, sticky="nsew")
+
     frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
-    frame_direito.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+    frame_direito.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
 
  # Texto e visor
-    texto = tk.Label(frame_esquerdo, text="Vote:", bg="white", font=("Arial", 12))
+    texto = tk.Label(frame_esquerdo, text="Vote:", bg="white", font=("Arial", 14))
     texto.pack(pady=10)
-
-    visor = tk.Entry(frame_esquerdo, font=("Arial", 16), justify="center")
+    # Caixa para o visor
+    visor = tk.Entry(frame_esquerdo, font=("Arial", 16), justify="center", bg="#f4f4f4", width=20)
     visor.pack(pady=10)
 
- # teclado numérico
+    # teclado numérico
     criar_teclado_no_frame(frame_direito, visor, confirmar_voto)
 
-# ela de confirmação
+
+def tela_confirmacao_voto(numero_candidato):
+    mudar_tela(tela_confirmacao)
+
+    # estrutura
+    frame_principal = tk.Frame(urna_eletronica, bg="white", width=700, height=400)
+    frame_principal.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+
+    texto_pergunta = tk.Label(
+        frame_principal,
+        text=f"Você deseja confirmar o voto no número {numero_candidato}?",
+        bg="white",
+        font=("Arial", 16, "bold"),
+        fg="#007BFF"
+    )
+    texto_pergunta.pack(pady=50)
+
+
+    btn_confirmar = tk.Button(
+        frame_principal,
+        text="Confirmar",
+        font=("Arial", 12, "bold"),
+        bg="green",
+        fg="white",
+        width=15,
+        height=2,
+        command=lambda: tela_confirmacao(numero_candidato)
+    )
+    btn_confirmar.pack(pady=10)
+
+
+    btn_corrigir = tk.Button(
+        frame_principal,
+        text="Corrigir",
+        font=("Arial", 12, "bold"),
+        bg="red",
+        fg="white",
+        width=15,
+        height=2,
+        command=lambda: tela_voto(eleitor)
+    )
+    btn_corrigir.pack(pady=5)
+
+
+# tela de confirmação
 def tela_confirmacao():
     def finalizar_votacao():
         mudar_tela(tela_inicial)
@@ -182,14 +263,53 @@ def tela_confirmacao():
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 #teclado
+    frame_vazio = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  # espaçamento 1
+    frame_vazio.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+    frame_vazio_2 = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  # espaçamento 2
+    frame_vazio_2.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+
+    frame_vazio_3 = tk.Frame(urna_eletronica, bg="white", width=25, height=300)  # espaçamento 3
+    frame_vazio_3.grid(row=0, column=2, padx=20, pady=10, sticky="nsew")
+
     frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
-    frame_direito.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+    frame_direito.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
 
 # Texto
-    texto = tk.Label(frame_esquerdo, text=f"Voto Confirmado!\nObrigado por votar!\n{urna}", bg="white", font=("Arial", 12))
-    texto.pack(pady=20)
+    # Mensagens de confirmação fora da caixa
+    msg_confirmacao = tk.Label(
+        frame_esquerdo,
+        text="Voto Confirmado!",
+        bg="white",
+        font=("Arial", 14, "bold"),
+        fg="#007BFF"  # Azul usado anteriormente
+    )
+    msg_confirmacao.pack(pady=(10, 0))  # Espaçamento superior de 10, sem inferior
 
-# teclado numérico
+    msg_obrigado = tk.Label(
+        frame_esquerdo,
+        text="Obrigado por votar!",
+        bg="white",
+        font=("Arial", 12),
+        fg="#007BFF"  # Azul usado anteriormente
+    )
+    msg_obrigado.pack(pady=(0, 10))  # Espaçamento inferior de 10, sem superior
+
+    # Caixa para exibir as informações da urna
+    info_frame = tk.Frame(frame_esquerdo, bg="#f4f4f4", bd=2, relief="solid", padx=10, pady=10)
+    info_frame.pack(pady=10, fill="x")
+
+    # Informações da urna dentro da caixa
+    texto_info = tk.Label(
+        info_frame,
+        text=f"{urna}",
+        bg="#f4f4f4",
+        font=("Arial", 12),
+        fg="#333333"
+    )
+    texto_info.pack()
+
+    # teclado numérico
     criar_teclado_no_frame(frame_direito, None, finalizar_votacao)
 
 # funcao do teclado numérico
