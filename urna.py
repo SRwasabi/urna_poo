@@ -178,13 +178,15 @@ def tela_voto(eleitor):
     def confirmar_voto():
         voto = visor.get().strip()
 
-        if voto == "VOTO EM BRANCO":
-            urna.registrar_voto(eleitor, "NULO")
+        print(f"Voto recebido: '{voto}'")
+
+        if voto == "Voto em Branco":
+            urna.registrar_voto(eleitor, "BRANCO")
         elif voto == "":
             urna.registrar_voto(eleitor, "NULO")
         elif voto.isdigit():
             voto = int(voto)
-            if urna.candidato_existe(voto):
+            if any(candidato.numero == voto for candidato in urna.candidatos):
                 urna.registrar_voto(eleitor, voto)
             else:
                 urna.registrar_voto(eleitor, "NULO")
@@ -192,6 +194,7 @@ def tela_voto(eleitor):
             urna.registrar_voto(eleitor, "NULO")
 
         mudar_tela(tela_confirmacao)
+
 
 
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
@@ -209,14 +212,12 @@ def tela_voto(eleitor):
     frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
     frame_direito.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
 
-    # Texto e visor
     texto = tk.Label(frame_esquerdo, text="Vote:", bg="white", font=("Arial", 14))
     texto.pack(pady=10)
 
     visor = tk.Entry(frame_esquerdo, font=("Arial", 16), justify="center", bg="#f4f4f4", width=20)
     visor.pack(pady=10)
 
-    # Teclado numérico
     criar_teclado_no_frame(frame_direito, visor, confirmar_voto)
 
 
@@ -238,30 +239,7 @@ def tela_confirmacao_voto(numero_candidato):
     texto_pergunta.pack(pady=50)
 
 
-    btn_confirmar = tk.Button(
-        frame_principal,
-        text="Confirmar",
-        font=("Arial", 12, "bold"),
-        bg="green",
-        fg="white",
-        width=15,
-        height=2,
-        command=lambda: tela_confirmacao(numero_candidato)
-    )
-    btn_confirmar.pack(pady=10)
 
-
-    btn_corrigir = tk.Button(
-        frame_principal,
-        text="Corrigir",
-        font=("Arial", 12, "bold"),
-        bg="red",
-        fg="white",
-        width=15,
-        height=2,
-        command=lambda: tela_voto(eleitor)
-    )
-    btn_corrigir.pack(pady=5)
 
 
 # tela de confirmação
@@ -269,48 +247,42 @@ def tela_confirmacao():
     def finalizar_votacao():
         mudar_tela(tela_inicial)
 
- # Estrutura principal
- #visor
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-#teclado
-    frame_vazio = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  # espaçamento 1
+
+    frame_vazio = tk.Frame(urna_eletronica, bg="white", width=50, height=400)
     frame_vazio.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
-    frame_vazio_2 = tk.Frame(urna_eletronica, bg="white", width=50, height=400)  # espaçamento 2
+    frame_vazio_2 = tk.Frame(urna_eletronica, bg="white", width=50, height=400)
     frame_vazio_2.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
 
-    frame_vazio_3 = tk.Frame(urna_eletronica, bg="white", width=25, height=300)  # espaçamento 3
+    frame_vazio_3 = tk.Frame(urna_eletronica, bg="white", width=25, height=300)
     frame_vazio_3.grid(row=0, column=2, padx=20, pady=10, sticky="nsew")
 
     frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
     frame_direito.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
 
-# Texto
-    # Mensagens de confirmação fora da caixa
     msg_confirmacao = tk.Label(
         frame_esquerdo,
         text="Voto Confirmado!",
         bg="white",
         font=("Arial", 14, "bold"),
-        fg="#007BFF"  # Azul usado anteriormente
+        fg="#007BFF"
     )
-    msg_confirmacao.pack(pady=(10, 0))  # Espaçamento superior de 10, sem inferior
+    msg_confirmacao.pack(pady=(10, 0))
 
     msg_obrigado = tk.Label(
         frame_esquerdo,
         text="Obrigado por votar!",
         bg="white",
         font=("Arial", 12),
-        fg="#007BFF"  # Azul usado anteriormente
+        fg="#007BFF"
     )
-    msg_obrigado.pack(pady=(0, 10))  # Espaçamento inferior de 10, sem superior
+    msg_obrigado.pack(pady=(0, 10))
 
-    # Caixa para exibir as informações da urna
     info_frame = tk.Frame(frame_esquerdo, bg="#f4f4f4", bd=2, relief="solid", padx=10, pady=10)
     info_frame.pack(pady=10, fill="x")
 
-    # Informações da urna dentro da caixa
     texto_info = tk.Label(
         info_frame,
         text=f"{urna}",
@@ -320,8 +292,8 @@ def tela_confirmacao():
     )
     texto_info.pack()
 
-    # teclado numérico
     criar_teclado_no_frame(frame_direito, None, finalizar_votacao)
+
 
 # funcao do teclado numérico
 def criar_teclado_no_frame(frame, visor, confirmar):
