@@ -178,17 +178,18 @@ def tela_voto(eleitor):
     def confirmar_voto():
         voto = visor.get().strip()
 
-        if voto == "Voto em branco":  # se o campo ta vazio, registra como voto em branco
-            urna.registrar_voto(eleitor, "BRANCO")
+        if voto == "VOTO EM BRANCO":
+            urna.registrar_voto(eleitor, "NULO")
+        elif voto == "":
+            urna.registrar_voto(eleitor, "NULO")
         elif voto.isdigit():
             voto = int(voto)
             if urna.candidato_existe(voto):
                 urna.registrar_voto(eleitor, voto)
             else:
-                urna.registrar_voto(eleitor, "Voto em branco")
+                urna.registrar_voto(eleitor, "NULO")
         else:
-            messagebox.showwarning("Erro", "Entrada inválida! Digite um número de candidato existente.")
-            return
+            urna.registrar_voto(eleitor, "NULO")
 
         mudar_tela(tela_confirmacao)
 
