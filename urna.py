@@ -216,7 +216,7 @@ def tela_questionar_voto(numero_candidato):
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
     frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
-    frame_direito.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+    frame_direito.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
 
 # tela de confirmação
 def tela_confirmacao():
