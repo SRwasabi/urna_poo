@@ -206,25 +206,58 @@ def tela_voto(eleitor):
 
 def tela_questionar_voto(eleitor, numero_candidato):
     def confirmar_voto():
-        # Verifica se o voto é válido e registra o voto
         urna.registrar_voto(eleitor, numero_candidato)
         mudar_tela(tela_confirmacao)
 
     def corrigir_voto():
-        # Volta para a tela de votação
         mudar_tela(lambda: tela_voto(eleitor))
 
-    # Limpa a tela atual
     for widget in urna_eletronica.winfo_children():
         widget.destroy()
 
-
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+    mensagem = tk.Label(
+        frame_esquerdo,
+        text="Você deseja confirmar seu voto?",
+        fg="#4A90E2",
+        bg="white",
+        font=("Arial", 16, "bold")
+    )
+    mensagem.pack(pady=20)
+
+    #  caixinha com o número do candidato
+    frame_caixinha = tk.Frame(frame_esquerdo, bg="#f4f4f4", bd=2, relief="solid", padx=12, pady=12, width=350)
+    frame_caixinha.pack(pady=10)
+
+    if numero_candidato == 0:
+        numero_label = tk.Label(
+            frame_caixinha,
+            text="Voto em branco",
+            fg="black",
+            bg="#f4f4f4",
+            font=("Arial", 18, "bold")
+        )
+    else:
+        numero_label = tk.Label(
+            frame_caixinha,
+            text=str(numero_candidato),
+            fg="black",
+            bg="#f4f4f4",
+            font=("Arial", 18, "bold")
+        )
+
+    numero_label.pack(padx=20, pady=10)
+    frame_vazio = tk.Frame(urna_eletronica, bg="white", width=30, height=400)
+    frame_vazio.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
+
     frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
     frame_direito.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
 
     criar_teclado_no_frame(frame_direito, None, confirmar_voto, corrigir_voto)
+
+
 
 # tela de confirmação
 def tela_confirmacao():
