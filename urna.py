@@ -178,9 +178,8 @@ def tela_informacoes(eleitor):
 def tela_voto(eleitor):
     def confirmar_voto():
         voto = int(visor.get())
-        urna.registrar_voto(eleitor, voto)
-
-        mudar_tela(tela_confirmacao)
+        #urna.registrar_voto(eleitor, voto)
+        mudar_tela(lambda: tela_questionar_voto(eleitor, voto))
 
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
@@ -205,18 +204,27 @@ def tela_voto(eleitor):
 
     criar_teclado_no_frame(frame_direito, visor, confirmar_voto)
 
-def tela_questionar_voto(numero_candidato):
+def tela_questionar_voto(eleitor, numero_candidato):
     def confirmar_voto():
+        # Verifica se o voto é válido e registra o voto
         urna.registrar_voto(eleitor, numero_candidato)
         mudar_tela(tela_confirmacao)
+
     def corrigir_voto():
+        # Volta para a tela de votação
         mudar_tela(lambda: tela_voto(eleitor))
+
+    # Limpa a tela atual
     for widget in urna_eletronica.winfo_children():
         widget.destroy()
+
+
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
     frame_direito = tk.Frame(urna_eletronica, bg="white", width=300, height=400)
     frame_direito.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+
+    criar_teclado_no_frame(frame_direito, None, confirmar_voto, corrigir_voto)
 
 # tela de confirmação
 def tela_confirmacao():
@@ -273,7 +281,7 @@ def tela_confirmacao():
 
 
 # funcao do teclado numérico
-def criar_teclado_no_frame(frame, visor, confirmar):
+def criar_teclado_no_frame(frame, visor, confirmar, botao_corrigir_voto=None):
     def adicionar_numero(numero):
         if visor and len(visor.get()) < 12:
             visor.insert(tk.END, numero)
@@ -301,16 +309,28 @@ def criar_teclado_no_frame(frame, visor, confirmar):
                   command=lambda t=text: adicionar_numero(t)).grid(row=row, column=col, padx=5, pady=5)
 
     # botao corrigir formatação
-    tk.Button(
-        frame,
-        text="Corrigir",
-        font=("Arial", 12, "bold"),
-        bg="red",
-        fg="white",
-        width=8,
-        height=2,
-        command=corrigir
-    ).grid(row=5, column=0, pady=5)
+    if botao_corrigir_voto:
+        tk.Button(
+            frame,
+            text="Corrigir",
+            font=("Arial", 12, "bold"),
+            bg="red",
+            fg="white",
+            width=8,
+            height=2,
+            command=botao_corrigir_voto
+        ).grid(row=5, column=0, pady=5)
+    else:
+        tk.Button(
+            frame,
+            text="Corrigir",
+            font=("Arial", 12, "bold"),
+            bg="red",
+            fg="white",
+            width=8,
+            height=2,
+            command=corrigir
+        ).grid(row=5, column=0, pady=5)
 
     # botao branco formatação
     tk.Button(
