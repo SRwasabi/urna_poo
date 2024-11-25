@@ -223,6 +223,7 @@ def tela_confirmacao():
     def finalizar_votacao():
         mudar_tela(tela_inicial)
 
+
     frame_esquerdo = tk.Frame(urna_eletronica, bg="white", width=400, height=400)
     frame_esquerdo.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
