@@ -35,7 +35,7 @@ except FileNotFoundError as erro:
     print("Arquivo não encontrado. Nenhum eleitor carregado!")
 
 # Criação da urna com os dados carregados
-urna = Urna("madu", "1", "1", candidatos.values(), eleitores.values())
+urna = Urna("claudinho", "1", "1", candidatos.values(), eleitores.values())
 #==================================================================================================#
 
 
@@ -293,7 +293,8 @@ def criar_teclado_no_frame(frame, visor, confirmar, botao_corrigir_voto=None):
     def branco():
         if visor:
             visor.delete(0, tk.END)
-            visor.insert(0, "Voto em Branco")
+            visor.insert(0, 0)
+            #visor.insert(0, "Voto em Branco")
 # o primeiro numero é a numero do teclado
 # o segundo numero é a linha
 # o terceiro numero é a coluna
